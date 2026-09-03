@@ -43,42 +43,42 @@ const server = http.createServer(async (req, res) => {
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Quadrilateral Quest - QR Code</title>
+                    <title>Triangle Treasure Hunt - QR Code</title>
                     <style>
                         body { 
-                            background: #0b0f19; 
+                            background: linear-gradient(135deg, #06283D, #1363DF, #47B5FF);
                             color: white; 
                             display: flex; 
                             justify-content: center; 
                             align-items: center; 
                             min-height: 100vh; 
                             margin: 0;
-                            font-family: 'Segoe UI', sans-serif;
+                            font-family: Arial, sans-serif;
                         }
                         .container {
                             text-align: center;
-                            background: #1a1525;
+                            background: rgba(0, 0, 0, 0.65);
                             padding: 40px;
-                            border-radius: 20px;
-                            border: 1px solid #333;
+                            border-radius: 25px;
+                            border: 2px solid gold;
                             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
                         }
-                        h1 { color: #00f2fe; text-transform: uppercase; letter-spacing: 2px; }
+                        h1 { color: gold; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; }
                         img { max-width: 400px; padding: 20px; background: white; border-radius: 10px; margin: 20px 0; }
                         .url { 
-                            background: #2a2535; 
+                            background: rgba(255,255,255,0.1); 
                             padding: 15px; 
                             border-radius: 8px; 
                             margin: 20px 0;
                             word-break: break-all;
                             font-family: monospace;
                         }
-                        .status { color: #00f2fe; font-size: 1.1rem; margin: 20px 0; }
+                        .status { color: gold; font-size: 1.1rem; margin: 20px 0; }
                     </style>
                 </head>
                 <body>
                     <div class="container">
-                        <h1>QUADRILATERAL QUEST</h1>
+                        <h1>🏴‍☠️ Triangle Treasure Hunt</h1>
                         <p class="status">📱 Scan this QR code on another device:</p>
                         <img src="${qrCode}" alt="QR Code">
                         <p class="status">Or visit:</p>
@@ -116,156 +116,710 @@ function getGameHTML() {
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quadrilateral Quest</title>
-    <style>
-        :root { --neon: #00f2fe; --bg: #0b0f19; --card: #1a1525; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; }
-        .box { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; text-align: center; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { color: var(--neon); text-transform: uppercase; letter-spacing: 2px; }
-        .instructions { background: rgba(0,242,254,0.1); padding: 15px; border-radius: 10px; margin: 20px 0; font-size: 0.9rem; border-left: 4px solid var(--neon); text-align: left; }
-        .btn { background: linear-gradient(90deg, #00f2fe, #8e2de2); border: none; padding: 15px 30px; cursor: pointer; border-radius: 10px; font-weight: bold; color: #000; width: 100%; margin-top: 10px; transition: transform 0.2s; }
-        .btn:hover { transform: scale(1.05); }
-        .choice { display: block; width: 100%; padding: 12px; margin: 8px 0; background: #2a2535; border: 2px solid #444; color: white; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
-        .choice:hover { border-color: var(--neon); background: #3a3545; }
-        .choice.correct { background: #00aa00; border-color: #00ff00; }
-        .choice.wrong { background: #aa0000; border-color: #ff0000; }
-        .hidden { display: none; }
-        #timer { font-size: 1.5rem; color: var(--neon); margin-bottom: 10px; font-weight: bold; }
-        #timer.warning { animation: pulse 0.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .progress { background: #2a2535; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
-        .progress-text { color: #888; font-size: 0.9rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Triangle Treasure Hunt</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #06283D, #1363DF, #47B5FF);
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    width: 95%;
+    max-width: 750px;
+    background: rgba(0, 0, 0, 0.65);
+    padding: 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+h1 {
+    font-size: 38px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(255,255,255,0.1);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background: #555;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: gold;
+    border-radius: 10px;
+    transition: width 0.4s;
+}
+
+#question {
+    font-size: 23px;
+    line-height: 1.5;
+}
+
+.answer-button {
+    width: 90%;
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 15px;
+    display: block;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    background: white;
+    color: #06283D;
+    transition: 0.2s;
+}
+
+.answer-button:hover {
+    transform: scale(1.03);
+    background: gold;
+}
+
+.correct {
+    background: #28a745 !important;
+    color: white !important;
+}
+
+.wrong {
+    background: #dc3545 !important;
+    color: white !important;
+}
+
+#message {
+    min-height: 30px;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.next-button,
+.restart-button,
+.start-button {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 12px;
+    background: gold;
+    color: #06283D;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.next-button:hover,
+.restart-button:hover,
+.start-button:hover {
+    transform: scale(1.05);
+}
+
+#start-screen {
+    display: block;
+}
+
+#game-screen {
+    display: none;
+}
+
+#end-screen {
+    display: none;
+}
+
+.treasure {
+    font-size: 90px;
+    animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-15px);
+    }
+}
+
+.instructions {
+    text-align: left;
+    background: rgba(255,255,255,0.1);
+    padding: 18px;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.instructions li {
+    margin: 8px 0;
+}
+
+@media(max-width:600px) {
+
+    h1 {
+        font-size: 29px;
+    }
+
+    #question {
+        font-size: 19px;
+    }
+
+    .stats {
+        font-size: 15px;
+    }
+
+    .game-container {
+        padding: 20px;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
 
-<div id="start" class="box">
-    <h1>QUADRILATERAL QUEST</h1>
-    <div class="instructions">
-        <strong>📚 How to Play:</strong><br>
-        • You will face 10 geometry riddles.<br>
-        • You have exactly <strong>20 seconds</strong> for each question.<br>
-        • Select the right answer to gain 10 points.<br>
-        • Keep an eye on the timer!
-    </div>
-    <button class="btn" onclick="start()">ENTER THE DUNGEON</button>
+<div class="game-container">
+
+<!-- START SCREEN -->
+
+<div id="start-screen">
+
+<h1>🏴‍☠️ Triangle Treasure Hunt</h1>
+
+<p class="subtitle">
+Test your Grade 8 geometry skills and find the hidden treasure!
+</p>
+
+<div class="treasure">💰</div>
+
+<div class="instructions">
+
+<h2>📜 Rules</h2>
+
+<ul>
+
+<li>Answer 10 mathematics challenges.</li>
+
+<li>Each correct answer gives you <b>10 coins</b> 🪙.</li>
+
+<li>You start with <b>3 lives</b> ❤️.</li>
+
+<li>A wrong answer costs one life.</li>
+
+<li>The questions cover similar triangles, angles, ratios and scale factors.</li>
+
+<li>Try to score at least <b>80/100</b> to become a Triangle Treasure Master!</li>
+
+</ul>
+
 </div>
 
-<div id="game" class="box hidden">
-    <div class="progress">
-        <div class="progress-text">Question <span id="questionNum">1</span>/10</div>
-    </div>
-    <div id="timer">20s</div>
-    <h3 id="question">Question?</h3>
-    <div id="options"></div>
+<button class="start-button" onclick="startGame()">
+⚔️ Start Adventure
+</button>
+
 </div>
 
-<div id="end" class="box hidden">
-    <h1>QUEST COMPLETE</h1>
-    <h2 id="finalScore"></h2>
-    <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+
+<!-- GAME SCREEN -->
+
+<div id="game-screen">
+
+<h1>🏴‍☠️ Triangle Treasure Hunt</h1>
+
+<div class="stats">
+
+<div>
+🪙 Score:
+<span id="score">0</span>
 </div>
+
+<div>
+❤️ Lives:
+<span id="lives">3</span>
+</div>
+
+<div>
+📍 Question:
+<span id="question-number">1</span>/10
+</div>
+
+</div>
+
+<div class="progress-container">
+
+<div class="progress-bar" id="progress"></div>
+
+</div>
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+<p id="message"></p>
+
+<button
+class="next-button"
+id="next-button"
+onclick="nextQuestion()"
+style="display:none;">
+Next Challenge ➡️
+</button>
+
+</div>
+
+
+<!-- END SCREEN -->
+
+<div id="end-screen">
+
+<div class="treasure">
+🏆
+</div>
+
+<h1>Adventure Complete!</h1>
+
+<h2 id="final-score"></h2>
+
+<p id="final-message"></p>
+
+<button class="restart-button" onclick="restartGame()">
+🔄 Play Again
+</button>
+
+</div>
+
+</div>
+
 
 <script>
-    const data = [
-        { q: "Largest angle in 1:2:3:4 ratio quad?", a: "144°", o: ["36°", "72°", "108°", "144°"] },
-        { q: "Rhombus diagonals 6cm & 8cm. Perimeter?", a: "20cm", o: ["14cm", "20cm", "24cm", "28cm"] },
-        { q: "Parallelogram angles (2x+10) & (3x-20). First angle?", a: "86°", o: ["38°", "76°", "86°", "94°"] },
-        { q: "Trapezoid bases 10 and 22. Median?", a: "16", o: ["12", "16", "18", "32"] },
-        { q: "Kite angles 40° and 100°. Side angle?", a: "110°", o: ["90°", "110°", "120°", "220°"] },
-        { q: "Rectangle diagonals cross at 60°. Triangles face short sides?", a: "Equilateral", o: ["Right", "Scalene", "Isosceles", "Equilateral"] },
-        { q: "Isosceles trapezoid base angles 70°. Top angles?", a: "110°", o: ["70°", "90°", "110°", "180°"] },
-        { q: "Rhombus diagonal = side. Biggest angle?", a: "120°", o: ["60°", "90°", "120°", "150°"] },
-        { q: "Diagonals equal, bisect, not 90°. What am I?", a: "Rectangle", o: ["Square", "Rhombus", "Rectangle", "Kite"] },
-        { q: "Parallelogram perimeter 40cm. Sides diff 4. Shortest side?", a: "8cm", o: ["4cm", "6cm", "8cm", "12cm"] }
-    ];
 
-    let i = 0, score = 0, time, interval, answered = false;
+/* =========================
+   GAME VARIABLES
+========================= */
 
-    function start() {
-        data.sort(() => Math.random() - 0.5);
-        document.getElementById('start').classList.add('hidden');
-        document.getElementById('game').classList.remove('hidden');
-        next();
+let score = 0;
+let lives = 3;
+let currentQuestion = 0;
+
+
+/* =========================
+   QUESTIONS
+========================= */
+
+const questions = [
+
+{
+    question:
+    "Two triangles have angles of 50°, 60°, and 70°. What can you conclude?",
+
+    answers: [
+        "They are similar",
+        "They have equal areas",
+        "They are squares",
+        "They cannot be compared"
+    ],
+
+    correct: 0
+},
+
+{
+    question:
+    "Two similar triangles have a corresponding angle of 65°. What is the matching angle in the other triangle?",
+
+    answers: [
+        "25°",
+        "65°",
+        "115°",
+        "130°"
+    ],
+
+    correct: 1
+},
+
+{
+    question:
+    "Two similar triangles have corresponding sides in the ratio 2:3. If a side of the smaller triangle is 8 cm, what is the corresponding side of the larger triangle?",
+
+    answers: [
+        "10 cm",
+        "12 cm",
+        "16 cm",
+        "24 cm"
+    ],
+
+    correct: 1
+},
+
+{
+    question:
+    "A triangle has a side length of 7 cm. It is enlarged by a scale factor of 3. What is the new side length?",
+
+    answers: [
+        "10 cm",
+        "14 cm",
+        "21 cm",
+        "28 cm"
+    ],
+
+    correct: 2
+},
+
+{
+    question:
+    "A triangle has angles of 45° and 75°. What is its third angle?",
+
+    answers: [
+        "50°",
+        "60°",
+        "70°",
+        "80°"
+    ],
+
+    correct: 1
+},
+
+{
+    question:
+    "The corresponding sides of two similar triangles are 5 cm and 15 cm. What is the ratio of the smaller side to the larger side?",
+
+    answers: [
+        "1:2",
+        "1:3",
+        "2:3",
+        "3:1"
+    ],
+
+    correct: 1
+},
+
+{
+    question:
+    "A triangle with a side of 12 cm is reduced using a scale factor of 1/2. What is the new side length?",
+
+    answers: [
+        "4 cm",
+        "6 cm",
+        "8 cm",
+        "10 cm"
+    ],
+
+    correct: 1
+},
+
+{
+    question:
+    "Triangle A has sides 4 cm, 6 cm, and 8 cm. Triangle B has sides 8 cm, 12 cm, and 16 cm. Are they similar?",
+
+    answers: [
+        "Yes",
+        "No",
+        "Only their angles are similar",
+        "Not enough information"
+    ],
+
+    correct: 0
+},
+
+{
+    question:
+    "The scale factor from Triangle A to Triangle B is 4. If a side of Triangle A is 5 cm, what is the corresponding side of Triangle B?",
+
+    answers: [
+        "9 cm",
+        "15 cm",
+        "20 cm",
+        "25 cm"
+    ],
+
+    correct: 2
+},
+
+{
+    question:
+    "Two similar triangles have corresponding sides of 6 cm and 18 cm. If another side of the smaller triangle is 10 cm, what is the corresponding side of the larger triangle?",
+
+    answers: [
+        "20 cm",
+        "24 cm",
+        "28 cm",
+        "30 cm"
+    ],
+
+    correct: 3
+}
+
+];
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame() {
+
+    score = 0;
+    lives = 3;
+    currentQuestion = 0;
+
+    document.getElementById("start-screen").style.display = "none";
+
+    document.getElementById("game-screen").style.display = "block";
+
+    document.getElementById("end-screen").style.display = "none";
+
+    updateStats();
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   SHOW QUESTION
+========================= */
+
+function showQuestion() {
+
+    const question = questions[currentQuestion];
+
+    document.getElementById("question").textContent =
+        question.question;
+
+    document.getElementById("question-number").textContent =
+        currentQuestion + 1;
+
+    document.getElementById("progress").style.width =
+        ((currentQuestion) / questions.length * 100) + "%";
+
+    document.getElementById("message").textContent = "";
+
+    document.getElementById("next-button").style.display = "none";
+
+    const answersContainer =
+        document.getElementById("answers");
+
+    answersContainer.innerHTML = "";
+
+    question.answers.forEach(function(answer, index) {
+
+        const button =
+            document.createElement("button");
+
+        button.textContent = answer;
+
+        button.className = "answer-button";
+
+        button.onclick = function() {
+
+            checkAnswer(index, button);
+
+        };
+
+        answersContainer.appendChild(button);
+
+    });
+
+}
+
+
+/* =========================
+   CHECK ANSWER
+========================= */
+
+function checkAnswer(selected, selectedButton) {
+
+    const question = questions[currentQuestion];
+
+    const buttons =
+        document.querySelectorAll(".answer-button");
+
+    buttons.forEach(function(button) {
+
+        button.disabled = true;
+
+    });
+
+
+    if(selected === question.correct) {
+
+        score += 10;
+
+        selectedButton.classList.add("correct");
+
+        document.getElementById("message").textContent =
+            "✅ Correct! You earned 10 coins! 🪙";
+
     }
 
-    function next() {
-        answered = false;
-        if(i >= data.length) { 
-            document.getElementById('game').classList.add('hidden'); 
-            document.getElementById('end').classList.remove('hidden'); 
-            document.getElementById('finalScore').innerText = "Score: " + score + " / 100"; 
-            return;
-        }
-        
-        document.getElementById('questionNum').innerText = i + 1;
-        time = 20;
-        document.getElementById('question').innerText = data[i].q;
-        const optDiv = document.getElementById('options');
-        optDiv.innerHTML = "";
-        
-        data[i].o.forEach(o => {
-            let b = document.createElement('button');
-            b.className = "choice";
-            b.innerText = o;
-            b.onclick = () => selectAnswer(b, o);
-            optDiv.appendChild(b);
-        });
-        
-        clearInterval(interval);
-        updateTimer();
-        interval = setInterval(updateTimer, 1000);
+    else {
+
+        lives--;
+
+        selectedButton.classList.add("wrong");
+
+        buttons[question.correct].classList.add("correct");
+
+        document.getElementById("message").textContent =
+            "❌ Incorrect! The correct answer is highlighted.";
+
     }
 
-    function updateTimer() {
-        const timerDiv = document.getElementById('timer');
-        timerDiv.innerText = time + "s";
-        
-        if(time <= 5) {
-            timerDiv.classList.add('warning');
-        } else {
-            timerDiv.classList.remove('warning');
-        }
-        
-        time--;
-        if(time < 0) { 
-            clearInterval(interval); 
-            if(!answered) nextQuestion();
-        }
+
+    updateStats();
+
+
+    if(lives <= 0) {
+
+        setTimeout(function() {
+
+            endGame();
+
+        }, 1200);
+
+        return;
+
     }
 
-    function selectAnswer(btn, answer) {
-        if(answered) return;
-        answered = true;
-        clearInterval(interval);
-        
-        const correct = answer === data[i].a;
-        
-        // Disable all buttons
-        document.querySelectorAll('.choice').forEach(b => b.style.pointerEvents = 'none');
-        
-        if(correct) {
-            btn.classList.add('correct');
-            score += 10;
-        } else {
-            btn.classList.add('wrong');
-            // Highlight correct answer
-            document.querySelectorAll('.choice').forEach(b => {
-                if(b.innerText === data[i].a) {
-                    b.classList.add('correct');
-                }
-            });
-        }
-        
-        setTimeout(nextQuestion, 1500);
+
+    document.getElementById("next-button").style.display =
+        "inline-block";
+
+}
+
+
+/* =========================
+   NEXT QUESTION
+========================= */
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    if(currentQuestion >= questions.length) {
+
+        endGame();
+
     }
 
-    function nextQuestion() {
-        i++;
-        next();
+    else {
+
+        showQuestion();
+
     }
+
+}
+
+
+/* =========================
+   UPDATE SCORE/LIVES
+========================= */
+
+function updateStats() {
+
+    document.getElementById("score").textContent =
+        score;
+
+    document.getElementById("lives").textContent =
+        lives;
+
+}
+
+
+/* =========================
+   END GAME
+========================= */
+
+function endGame() {
+
+    document.getElementById("game-screen").style.display =
+        "none";
+
+    document.getElementById("end-screen").style.display =
+        "block";
+
+    document.getElementById("progress").style.width =
+        "100%";
+
+    document.getElementById("final-score").textContent =
+        "Your Final Score: " + score + " / 100";
+
+
+    let message;
+
+
+    if(score >= 80) {
+
+        message =
+            "🎉 Amazing! You are a Triangle Treasure Master!";
+
+    }
+
+    else if(score >= 50) {
+
+        message =
+            "👏 Good job! Keep practising to become a master!";
+
+    }
+
+    else {
+
+        message =
+            "📚 Keep practising! You can find the treasure next time!";
+
+    }
+
+
+    document.getElementById("final-message").textContent =
+        message;
+
+}
+
+
+/* =========================
+   RESTART
+========================= */
+
+function restartGame() {
+
+    document.getElementById("end-screen").style.display =
+        "none";
+
+    document.getElementById("start-screen").style.display =
+        "block";
+
+}
+
 </script>
 </body>
 </html>`;
@@ -273,7 +827,7 @@ function getGameHTML() {
 
 // Start server
 server.listen(PORT, '0.0.0.0', () => {
-    console.log('\n🎮 QUADRILATERAL QUEST - QR CODE SERVER 🎮');
+    console.log('\n🏴‍☠️ TRIANGLE TREASURE HUNT - QR CODE SERVER 🏴‍☠️');
     console.log('===============================================');
     console.log(`✅ Server running on: ${gameURL}`);
     console.log(`📱 QR Code page: ${gameURL}/qr`);
