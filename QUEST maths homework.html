@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quadrilateral Quest</title>
+    <style>
+        :root { --neon: #00f2fe; --bg: #0b0f19; --card: #1a1525; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .box { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; text-align: center; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: var(--neon); text-transform: uppercase; letter-spacing: 2px; }
+        .instructions { background: rgba(0,242,254,0.1); padding: 15px; border-radius: 10px; margin: 20px 0; font-size: 0.9rem; border-left: 4px solid var(--neon); text-align: left; }
+        .btn { background: linear-gradient(90deg, #00f2fe, #8e2de2); border: none; padding: 15px 30px; cursor: pointer; border-radius: 10px; font-weight: bold; color: #000; width: 100%; margin-top: 10px; }
+        .choice { display: block; width: 100%; padding: 12px; margin: 8px 0; background: #2a2535; border: 1px solid #444; color: white; cursor: pointer; border-radius: 8px; }
+        .choice:hover { border-color: var(--neon); }
+        .hidden { display: none; }
+        #timer { font-size: 1.5rem; color: var(--neon); margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="start" class="box">
+    <h1>QUADRILATERAL QUEST</h1>
+    <div class="instructions">
+        <strong>How to Play:</strong><br>
+        • You will face 10 geometry riddles.<br>
+        • You have exactly <strong>20 seconds</strong> for each question.<br>
+        • Select the right answer to gain 10 points.<br>
+        • Keep an eye on the timer!
+    </div>
+    <button class="btn" onclick="start()">ENTER THE DUNGEON</button>
+</div>
+
+<div id="game" class="box hidden">
+    <div id="timer">20s</div>
+    <h3 id="question">Question?</h3>
+    <div id="options"></div>
+</div>
+
+<div id="end" class="box hidden">
+    <h1>QUEST COMPLETE</h1>
+    <h2 id="finalScore"></h2>
+    <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+</div>
+
+<script>
+    const data = [
+        { q: "Largest angle in 1:2:3:4 ratio quad?", a: "144°", o: ["36°", "72°", "108°", "144°"] },
+        { q: "Rhombus diagonals 6cm & 8cm. Perimeter?", a: "20cm", o: ["14cm", "20cm", "24cm", "28cm"] },
+        { q: "Parallelogram angles (2x+10) & (3x-20). First angle?", a: "86°", o: ["38°", "76°", "86°", "94°"] },
+        { q: "Trapezoid bases 10 and 22. Median?", a: "16", o: ["12", "16", "18", "32"] },
+        { q: "Kite angles 40° and 100°. Side angle?", a: "110°", o: ["90°", "110°", "120°", "220°"] },
+        { q: "Rectangle diagonals cross at 60°. Triangles face short sides?", a: "Equilateral", o: ["Right", "Scalene", "Isosceles", "Equilateral"] },
+        { q: "Isosceles trapezoid base angles 70°. Top angles?", a: "110°", o: ["70°", "90°", "110°", "180°"] },
+        { q: "Rhombus diagonal = side. Biggest angle?", a: "120°", o: ["60°", "90°", "120°", "150°"] },
+        { q: "Diagonals equal, bisect, not 90°. What am I?", a: "Rectangle", o: ["Square", "Rhombus", "Rectangle", "Kite"] },
+        { q: "Parallelogram perimeter 40cm. Sides diff 4. Shortest side?", a: "8cm", o: ["4cm", "6cm", "8cm", "12cm"] }
+    ];
+
+    let i = 0, score = 0, time, interval;
+
+    function start() {
+        data.sort(() => Math.random() - 0.5);
+        document.getElementById('start').classList.add('hidden');
+        document.getElementById('game').classList.remove('hidden');
+        next();
+    }
+
+    function next() {
+        if(i >= data.length) { document.getElementById('game').classList.add('hidden'); document.getElementById('end').classList.remove('hidden'); document.getElementById('finalScore').innerText = "Score: " + score; return; }
+        time = 20;
+        document.getElementById('question').innerText = data[i].q;
+        const optDiv = document.getElementById('options');
+        optDiv.innerHTML = "";
+        data[i].o.forEach(o => {
+            let b = document.createElement('button');
+            b.className = "choice";
+            b.innerText = o;
+            b.onclick = () => { clearInterval(interval); if(o === data[i].a) score += 10; i++; next(); };
+            optDiv.appendChild(b);
+        });
+        clearInterval(interval);
+        interval = setInterval(() => {
+            time--;
+            document.getElementById('timer').innerText = time + "s";
+            if(time <= 0) { clearInterval(interval); i++; next(); }
+        }, 1000);
+    }
+</script>
+</body>
+</html>
