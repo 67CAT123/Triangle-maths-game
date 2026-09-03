@@ -1,0 +1,16 @@
+{
+  "name": "quadrilateral-quest-qr",
+  "version": "1.0.0",
+  "description": "Multi-device geometry quiz game using QR codes",
+  "main": "qr-game-server.js",
+  "scripts": {
+    "start": "node qr-game-server.js",
+    "dev": "node qr-game-server.js"
+  },
+  "keywords": ["game", "qr-code", "geometry", "quiz", "multiplayer"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.5.3"
+  }
+}
